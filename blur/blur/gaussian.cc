@@ -8,7 +8,7 @@ using namespace std;
 using namespace config;
 
 
-namespace pano {
+namespace gblur {
 
 GaussCache::GaussCache(float sigma) {
 	// TODO decide window size ?
