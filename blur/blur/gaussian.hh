@@ -1,7 +1,3 @@
-// File: gaussian.hh
-// Date: Sat May 04 01:33:12 2013 +0800
-// Author: Yuxin Wu <ppwwyyxxc@gmail.com>
-
 #pragma once
 #include <memory>
 #include <vector>

@@ -1,7 +1,3 @@
-// File: utils.cc
-// Date: Tue Apr 23 11:33:17 2013 +0800
-// Author: Yuxin Wu <ppwwyyxxc@gmail.com>
-
 #include "utils.hh"
 
 std::string TERM_COLOR(int k) {

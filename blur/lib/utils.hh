@@ -1,7 +1,3 @@
-// File: utils.hh
-// Date: Tue Apr 23 11:31:57 2013 +0800
-// Author: Yuxin Wu <ppwwyyxxc@gmail.com>
-
 
 #pragma once
 
