@@ -26,11 +26,13 @@ int main()
 	Mat<float> img(height, width, channels);
 	for (int i = 0; i < img.pixels(); ++i)
 		img.data()[i] = i;
+	std::cout << "image: " << std::endl;
 	image_print(img);
 
 	GaussianBlur blur(2);
 	Mat<float> img_blurred(height, width, channels);
 	img_blurred = blur.blur(img);
+	std::cout << "image_blurred: " << std::endl;
 	image_print(img_blurred);
 
 	return 0;
