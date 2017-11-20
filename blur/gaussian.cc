@@ -1,14 +1,10 @@
 #include <algorithm>
 #include <cmath>
 #include "gaussian.hh"
-#include "lib/config.hh"
-#include "lib/utils.hh"
-#include "lib/timer.hh"
+#include "utils.hh"
 using namespace std;
-using namespace config;
 
-
-namespace gblur {
+#define GAUSS_WINDOW_FACTOR 4
 
 GaussCache::GaussCache(float sigma) {
 	// TODO decide window size ?
@@ -33,7 +29,4 @@ GaussCache::GaussCache(float sigma) {
 	kernel[0] = fac;
 	for (int i = 1; i <= center; i ++)
 		kernel[-i] = (kernel[i] *= fac);
-}
-
-
 }

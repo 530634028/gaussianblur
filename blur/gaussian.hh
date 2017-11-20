@@ -1,12 +1,7 @@
-#pragma once
 #include <memory>
 #include <vector>
-#include "lib/mat.h"
-#include "lib/utils.hh"
-#include "lib/timer.hh"
-#include "common/common.hh"
-
-namespace gblur {
+#include "mat.h"
+#include "utils.hh"
 
 class GaussCache {
 	public:
@@ -26,7 +21,6 @@ class GaussianBlur {
 		template <typename T>
 		Mat<T> blur(const Mat<T>& img) const {
 			m_assert(img.channels() == 1);
-			TotalTimer tm("gaussianblur");
 			const int w = img.width(), h = img.height();
 			Mat<T> ret(h, w, img.channels());
 
@@ -104,5 +98,3 @@ class MultiScaleGaussianBlur {
 	Mat32f blur(const Mat32f& img, int n) const
 	{ return gauss[n - 1].blur(img); }
 };
-
-}

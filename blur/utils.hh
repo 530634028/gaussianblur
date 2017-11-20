@@ -1,6 +1,4 @@
-
 #pragma once
-
 #include <cstdarg>
 #include <cstdlib>
 #include <string>
