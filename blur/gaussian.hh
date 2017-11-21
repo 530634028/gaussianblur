@@ -73,10 +73,6 @@ class GaussianBlur {
 			REP(i, h) {
 				T *dest = ret.ptr(i);
 				memcpy(cur_line, dest, sizeof(T) * w);
-				std::cout << "cur_line: " << std::endl;
-				for (int i = 0; i < w; ++i)
-					std::cout << cur_line[i] << ", ";
-				std::cout << std::endl;
 				{	// pad the border
 					T v0 = cur_line[0];
 					for (int j = 1; j <= center; j ++)
@@ -85,19 +81,11 @@ class GaussianBlur {
 					for (int j = 0; j < center; j ++)
 						cur_line[center + j] = v0;
 				}
-				std::cout << "cur_line: " << std::endl;
-				for (int i = 0; i < (w+kw); ++i)
-					std::cout << cur_line[i] << ", ";
-				std::cout << std::endl;
 				// sum: image[index] * kernel[k]
 				REP(j, w) {
 					T tmp{0};
 					for (int k = -center; k <= center; k ++)
-					{
-						std::cout << "cur_line, kernel: " << cur_line[j+k] << ", " << kernel[k] << std::endl;
 						tmp += cur_line[j + k] * kernel[k];
-					}
-					std::cout << "tmp: " << tmp << std::endl;
 					*(dest ++) = tmp;
 				}
 			}
