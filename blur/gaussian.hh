@@ -58,15 +58,6 @@ class GaussianBlur {
 					*dest = tmp;
 					dest += w;
 				}
-				std::cout << "ret" << std::endl;
-				for (int m = 0; m < ret.rows(); ++m)
-				{
-					for (int n = 0; n < ret.cols(); ++n)
-					{
-						std::cout << *ret.ptr(m, n) << ", ";
-					}
-					std::cout << std::endl;
-				}
 			}
 
 			// apply to rows
