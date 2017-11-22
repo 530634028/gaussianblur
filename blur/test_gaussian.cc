@@ -17,7 +17,23 @@ void image_print(Mat<T> img)
 }
 
 
-int main() 
+template <typename T>
+void test_gaussian_cpu(Mat<T> img, Mat<T> img_blurred) 
+{
+	GaussianBlur blur(2);
+	img_blurred = blur.blur(img);
+}
+
+
+template <typename T>
+void test_gaussian_gpu(Mat<T> img, Mat<T> img_blurred)
+{
+	GaussianBlurGPU blur(2);
+	img_blurred = blur.blur(img);
+}
+
+
+int main()
 {
 	int height = 3;
 	int width = 4;
@@ -29,13 +45,13 @@ int main()
 	std::cout << "image: " << std::endl;
 	image_print(img);
 
-	GaussianBlur blur(2);
-	Mat<float> img_blurred(height, width, channels);
-	img_blurred = blur.blur(img);
-	std::cout << "image_blurred: " << std::endl;
-	image_print(img_blurred);
+	Mat<float> img_blurred_cpu(height, width, channels);
+	test_gaussian_cpu(img, img_blurred_cpu);
+	std::cout << "image_blurred_cpu: " << std::endl;
+	image_print(img_blurred_cpu);
 
-	return 0;
+	Mat<float> img_blurred_gpu(height, width, channels);
+	test_gaussian_gpu(img, img_blurred_gpu);
+	std::cout << "image_blurred_gpu: " << std::endl;
+	image_print(img_blurred_gpu);
 }
-
-

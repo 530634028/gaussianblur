@@ -11,6 +11,8 @@ BUILD_DIR = _build
 HEADERS = gaussian.hh mat.h utils.hh
 SOURCES = gaussian.cc
 
+# ----------------------------------------------------------------------------
+
 # include: cuda
 CUDA_INCLUD = -I/usr/local/cuda/include
 CUDA_LIB = -L/usr/local/cuda/lib64
