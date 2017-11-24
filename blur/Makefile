@@ -29,6 +29,10 @@ NVCC_LDFLAGS = $(CUDA_LIB)
 
 # ----------------------------------------------------------------------------
 
+help:
+	@echo "Command List:"
+	@echo "- cpu"
+	@echo "- gpu"
 
 cpu:
 	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(CC_FLAGS)
