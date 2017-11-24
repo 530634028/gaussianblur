@@ -1,11 +1,11 @@
 #include "../utils/image.hh"
-//#include "../gaussian.cu"
+#include "../gaussian.cu"
 
 
 template <typename T>
 void test_gaussian_gpu(Mat<T> img) 
 {
-	//GaussianBlur blur(2);
+	GaussianBlurGPU blur(2);
 	//Mat<T> img_blurred = blur.blur(img);
 
 	//std::cout << "image_blurred: " << std::endl;
