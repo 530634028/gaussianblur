@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+
 #include "mat.h"
 
 template <typename T>

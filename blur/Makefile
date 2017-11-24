@@ -23,7 +23,7 @@ CC = g++
 CC_FLAGS = -std=c++11 $(CC_INCLUDE)
 # cuda
 NVCC = nvcc
-NVCC_FLAGS = $(CUDA_INCLUDE) $(CUDA_ARCH)
+NVCC_FLAGS = $(CC_INCLUDE) $(CUDA_INCLUDE) $(CUDA_ARCH)
 NVCC_LDFLAGS = $(CUDA_LIB) -lcublas
 
 # ----------------------------------------------------------------------------
@@ -32,12 +32,13 @@ all:
 	cat log
 
 cpu:
-	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(SOURCES) $(CC_FLAGS)
+	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(CC_FLAGS)
 	$(BUILD_DIR)/test_gaussian_cpu > log
 	cat log
 
 cuda:
-	$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cu gaussian.cu $(SOURCES_CUDA) $(CUDA_INCLUDE) $(CUDA_LIB)
+	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc $(CC_FLAGS)
+	#$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cu $(CUDA_INCLUDE) $(CUDA_LIB)
 	$(BUILD_DIR)/test_gaussian_gpu > log
 	cat log
 
