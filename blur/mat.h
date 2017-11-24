@@ -1,3 +1,6 @@
+#ifndef MAT_H
+#define MAT_H
+
 #include <memory>
 #include <cstring>
 #include "debugutils.hh"
@@ -57,3 +60,5 @@ class Mat {
 
 using Mat32f = Mat<float>;
 using Matuc = Mat<unsigned char>;
+
+#endif
