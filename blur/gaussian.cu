@@ -9,6 +9,8 @@
 
 __constant__ float c_gKer[MAX_KSIZE_HALF+1];
 
+/*
+template <typename T>
 __global__ void gaussian_blur_kernel (const int height,
                                       const int width,
                                       const int center,
@@ -47,4 +49,17 @@ __global__ void gaussian_blur_kernel (const int height,
 			dst(y, x) = res;
 		}
 	} 
+}
+*/
+
+
+/* --------------------------------------------------------------------------- */
+
+template <typename T>
+__global__ void GaussianBlurKernel (const int center, const int w, const int h)
+{
+	const int memsize = center * 2 + max(w, h);
+	float * cur_line_mem[memsize];
+	cudaMalloc(cur_line_mem, memsize*sizeof(T));
+	volatile T *cur_line = cur_line_mem + ty * (bdx + 2 * center);
 }
