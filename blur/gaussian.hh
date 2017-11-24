@@ -1,8 +1,8 @@
 #include <iostream>
 #include <memory>
 #include <vector>
-#include "mat.h"
-#include "utils.hh"
+#include "utils/mat.h"
+#include "utils/utils.hh"
 
 class GaussCache {
 	public:

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "../image.hh"
+#include "../utils/image.hh"
 #include "../gaussian.hh"
 
 

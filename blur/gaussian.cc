@@ -1,7 +1,7 @@
 #include <algorithm>
 #include <cmath>
 #include "gaussian.hh"
-#include "utils.hh"
+#include "utils/utils.hh"
 using namespace std;
 
 #define GAUSS_WINDOW_FACTOR 4

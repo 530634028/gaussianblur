@@ -12,7 +12,7 @@ TESTS_DIR = tests
 # ----------------------------------------------------------------------------
 
 # include: g++
-CC_INCLUDE = -I./
+CC_INCLUDE = -I./ -I/$(TESTS_DIR)
 # include: cuda
 CUDA_INCLUD = -I/usr/local/cuda/include
 CUDA_LIB = -L/usr/local/cuda/lib64
