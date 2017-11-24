@@ -1,7 +1,7 @@
 #include <stdio.h>
 
-extern "C"
-__global__ void GaussianBlurKernel(const int center, float * kernel)
+template <typename T>
+__global__ void GaussianBlurKernel(const T * img, T * dst, const int kw, const int center, float * kernel)
 {
 	printf("%d\f", center);
 }
