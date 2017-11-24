@@ -1,6 +1,6 @@
 #include <stdio.h>
-#include "kernel.hh"
 
+extern "C"
 __global__ void GaussianBlurKernel(const int center, float * kernel)
 {
 	printf("%d\f", center);

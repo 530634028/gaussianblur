@@ -16,7 +16,7 @@ KERNEL_DIR = kernel
 CC_INCLUDE = -I./ -I$(TESTS_DIR) -I$(KERNEL_DIR)
 # include: cuda
 CUDA_INCLUD = -I/usr/local/cuda/include
-CUDA_LIB = -L/usr/local/cuda/lib64
+CUDA_LIB = -L/usr/local/cuda/lib64 -lcuda
 CUDA_ARCH = -gencode arch=compute_50,code=sm_50
 
 # g++
@@ -25,12 +25,10 @@ CC_FLAGS = -std=c++11 $(CC_INCLUDE)
 # cuda
 NVCC = nvcc
 NVCC_FLAGS = $(CC_INCLUDE) $(CUDA_INCLUDE) $(CUDA_ARCH)
-NVCC_LDFLAGS = $(CUDA_LIB) -lcublas
+NVCC_LDFLAGS = $(CUDA_LIB)
 
 # ----------------------------------------------------------------------------
 
-all: 
-	cat log
 
 cpu:
 	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(CC_FLAGS)
@@ -38,7 +36,7 @@ cpu:
 	cat log
 
 gpu: cuda
-	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(CC_FLAGS) -L$(BUILD_DIR) -lkernel $(CUDA_INCLUDE) $(CUDA_LIB)
+	$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(CC_FLAGS) -L$(BUILD_DIR) -lkernel $(CUDA_INCLUDE) $(CUDA_LIB)
 	$(BUILD_DIR)/test_gaussian_gpu > log
 	cat log
 
