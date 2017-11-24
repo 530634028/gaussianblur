@@ -2,9 +2,10 @@
 #include <cmath>
 #include "gaussian.hh"
 #include "utils/utils.hh"
+#include "config.hh"
+
 using namespace std;
 
-#define GAUSS_WINDOW_FACTOR 4
 
 GaussCache::GaussCache(float sigma) {
 	// TODO decide window size ?

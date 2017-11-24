@@ -1,0 +1,1 @@
+#define GAUSS_WINDOW_FACTOR 4
