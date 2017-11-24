@@ -8,11 +8,12 @@ mode = cpu
 
 BUILD_DIR = _build
 TESTS_DIR = tests
+KERNEL_DIR = kernel
 
 # ----------------------------------------------------------------------------
 
 # include: g++
-CC_INCLUDE = -I./ -I/$(TESTS_DIR)
+CC_INCLUDE = -I./ -I$(TESTS_DIR) -I$(KERNEL_DIR)
 # include: cuda
 CUDA_INCLUD = -I/usr/local/cuda/include
 CUDA_LIB = -L/usr/local/cuda/lib64
@@ -36,11 +37,19 @@ cpu:
 	$(BUILD_DIR)/test_gaussian_cpu > log
 	cat log
 
-cuda:
-	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc $(CC_FLAGS)
-	#$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cu $(CUDA_INCLUDE) $(CUDA_LIB)
+gpu: cuda
+	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(CC_FLAGS) -L$(BUILD_DIR) -lkernel $(CUDA_INCLUDE) $(CUDA_LIB)
 	$(BUILD_DIR)/test_gaussian_gpu > log
 	cat log
 
+cuda:
+	$(NVCC) -c $(KERNEL_DIR)/gaussian.cu -o $(BUILD_DIR)/gaussian_cu.o $(CUDA_INCLUDE) $(CUDA_LIB)
+	$(NVCC) -c $(KERNEL_DIR)/kernel.cu -o $(BUILD_DIR)/kernel.o $(CUDA_INCLUDE) $(CUDA_LIB)
+	$(AR) cr $(BUILD_DIR)/libkernel.a $(BUILD_DIR)/kernel.o $(BUILD_DIR)/gaussian_cu.o
+	$(AR) -t $(BUILD_DIR)/libkernel.a
+
 clean:
 	rm -rf $(BUILD_DIR)/*
+
+dummy:
+	ls $(KERNEL_DIR)

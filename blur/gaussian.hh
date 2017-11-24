@@ -3,6 +3,7 @@
 #include <vector>
 #include "utils/mat.h"
 #include "utils/utils.hh"
+#include "kernel/kernel.hh"
 
 class GaussCache {
 	public:
@@ -100,3 +101,26 @@ class MultiScaleGaussianBlur {
 	{ return gauss[n - 1].blur(img); }
 };
 
+/* ---------------------------------------------------------------------------------------- */
+
+class GaussianBlurGPU {
+	float sigma;
+	GaussCache gcache;
+	public:
+		GaussianBlurGPU(float sigma): sigma(sigma), gcache(sigma) {}
+
+		template <typename T>
+		Mat<T> blur(const Mat<T>& img) const {
+			m_assert(img.channels == 1);
+			const int w = img.width(), h = img.height();
+			Mat<T> ret(h, w, img.channels());
+
+			const int kw = gcache.kw;
+			const int center = kw / 2;
+			float * kernel = gcache.kernel;
+
+			GaussianBlurCaller(center, kernel);
+
+			return ret;
+		}
+};

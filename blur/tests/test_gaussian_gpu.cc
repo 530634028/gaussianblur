@@ -1,5 +1,5 @@
 #include "../utils/image.hh"
-#include "../gaussian.cu"
+#include "../gaussian.hh"
 
 
 template <typename T>
@@ -8,8 +8,8 @@ void test_gaussian_gpu(Mat<T> img)
 	GaussianBlurGPU blur(2);
 	Mat<T> img_blurred = blur.blur(img);
 
-	//std::cout << "image_blurred: " << std::endl;
-	//image_print(img_blurred);
+	std::cout << "image_blurred: " << std::endl;
+	image_print(img_blurred);
 }
 
 
