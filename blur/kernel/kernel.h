@@ -1,7 +1,8 @@
-#ifndef KERNEL_HH
-#define KERNEL_HH
+#ifndef KERNEL_H
+#define KERNEL_H
 
 template <typename T>
 void GaussianBlurCaller(const T * img, T * dst, const int kw, const int center, float * kernel);
+
 
 #endif

@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "kernel.hh"
+#include "kernel.h"
 #include "gaussian.cu"
 
 template <typename T>

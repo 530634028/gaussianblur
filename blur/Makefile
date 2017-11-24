@@ -40,7 +40,7 @@ cpu:
 	cat log
 
 gpu: cuda
-	$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(CC_FLAGS) $(CUDA_INCLUDE) -L$(BUILD_DIR) -lkernel $(CUDA_LIB)
+	$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc $(CC_FLAGS) $(CUDA_INCLUDE) -L$(BUILD_DIR) -lkernel $(CUDA_LIB)
 	$(BUILD_DIR)/test_gaussian_gpu > log
 	cat log
 
