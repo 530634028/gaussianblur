@@ -16,7 +16,7 @@ KERNEL_DIR = kernel
 CC_INCLUDE = -I./ -I$(TESTS_DIR) -I$(KERNEL_DIR)
 # include: cuda
 CUDA_INCLUD = -I/usr/local/cuda/include
-CUDA_LIB = -L/usr/local/cuda/lib64 -lcuda
+CUDA_LIB = -L/usr/local/cuda/lib64 -lcudart
 CUDA_ARCH = -gencode arch=compute_50,code=sm_50
 
 # g++
@@ -40,13 +40,13 @@ cpu:
 	cat log
 
 gpu: cuda
-	$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc $(CC_FLAGS) $(CUDA_INCLUDE) -L$(BUILD_DIR) -lkernel $(CUDA_LIB)
+	$(NVCC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc $(CC_FLAGS) $(NVCC_FLAGS) -L$(BUILD_DIR) -lkernel $(NVCC_LDFLAGS)
 	$(BUILD_DIR)/test_gaussian_gpu > log
 	cat log
 
 cuda:
-	$(NVCC) -c $(KERNEL_DIR)/gaussian.cu -o $(BUILD_DIR)/gaussian_cu.o $(CUDA_INCLUDE) $(CUDA_LIB)
-	$(NVCC) -c $(KERNEL_DIR)/kernel.cu -o $(BUILD_DIR)/kernel.o $(CUDA_INCLUDE) $(CUDA_LIB)
+	$(NVCC) -c $(KERNEL_DIR)/gaussian.cu -o $(BUILD_DIR)/gaussian_cu.o $(NVCC_FLAGS) $(NVCC_LDFLAGS)
+	$(NVCC) -c $(KERNEL_DIR)/kernel.cu -o $(BUILD_DIR)/kernel.o $(NVCC_FLAGS) $(NVCC_LDFLAGS)
 	$(AR) cr $(BUILD_DIR)/libkernel.a $(BUILD_DIR)/kernel.o $(BUILD_DIR)/gaussian_cu.o
 	$(AR) -t $(BUILD_DIR)/libkernel.a
 
