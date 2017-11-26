@@ -46,8 +46,7 @@ gpu: cuda
 
 cuda:
 	$(NVCC) -c $(KERNEL_DIR)/gaussian.cu -o $(BUILD_DIR)/gaussian_cu.o $(NVCC_FLAGS) $(NVCC_LDFLAGS)
-	$(NVCC) -c $(KERNEL_DIR)/kernel.cu -o $(BUILD_DIR)/kernel.o $(NVCC_FLAGS) $(NVCC_LDFLAGS)
-	$(AR) cr $(BUILD_DIR)/libkernel.a $(BUILD_DIR)/kernel.o $(BUILD_DIR)/gaussian_cu.o
+	$(AR) cr $(BUILD_DIR)/libkernel.a $(BUILD_DIR)/gaussian_cu.o
 	$(AR) -t $(BUILD_DIR)/libkernel.a
 
 clean:
