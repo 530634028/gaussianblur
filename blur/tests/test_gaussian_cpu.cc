@@ -14,6 +14,17 @@ void test_gaussian_cpu(Mat<T> img)
 }
 
 
+template <typename T>
+void test_gaussian_fast_cpu(Mat<T> img) 
+{
+	GaussianBlurFast blur(2);
+	Mat<T> img_blurred = blur.blur(img);
+
+	std::cout << "image_blurred: " << std::endl;
+	image_print(img_blurred);
+}
+
+
 int main()
 {
 	int height = 3;
@@ -26,4 +37,5 @@ int main()
 	image_print(img);
 
 	test_gaussian_cpu(img);
+	test_gaussian_fast_cpu(img);
 }
