@@ -28,7 +28,7 @@ NVCC_LDFLAGS = -L$(CUDA_LIB_DIR) -lcuda -lcudart
 
 all: image
 	$(CC) -o $(BUILD_DIR)/main main.cc $(BUILD_DIR)/image.o -I./ $(CC_FLAGS) $(CC_LDFLAGS) $(CUDA_LIBS) 
-	$(BUILD_DIR)/main
+	$(BUILD_DIR)/main images/cinque_terre_small.jpg $(BUILD_DIR)/out.jpg
 
 image:
 	$(NVCC) -o $(BUILD_DIR)/image.o -c image.cc -I./ $(NVCC_FLAGS) $(NVCC_LDFLAGS) $(OPENCV_FLAGS) $(OPENCV_LIBS)

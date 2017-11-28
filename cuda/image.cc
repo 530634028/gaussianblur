@@ -28,7 +28,7 @@ void image_preprocessing (unsigned char ** h_inputImageRGBA,
 		exit(1);
 	}
 
-	cv::cvColor(image, imageInputRGBA, CV_BGR2BGRA);
+	cv::cvtColor(image, imageInputRGBA, CV_BGR2BGRA);
 	imageOutputRGBA.create(image.rows, image.cols, CV_8UC4);
 	if (!imageInputRGBA.isContinuous() || !imageOutputRGBA.isContinuous())
 	{
