@@ -38,4 +38,42 @@ void image_preprocessing (unsigned char ** h_inputImageRGBA,
 
 	* h_inputImageRGBA = (unsigned char*)imageInputRGBA.ptr<unsigned char>(0);
 	* h_outputImageRGBA = (unsigned char*)imageOutputRGBA.ptr<unsigned char>(0);
+	const size_t numPixels = imageInputRGBA.rows * imageInputRGBA.cols;
+	checkCudaErrors(cudaMalloc(d_inputImageRGBA, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMalloc(d_outputImageRGBA, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMemset(*d_outputImageRGBA, 0, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMemcpy(*d_inputImageRGBA, *h_inputImageRGBA, sizeof(unsigned char)*numPixels, cudaMemcpyHostToDevice));
+
+	unsigned char * d_inputImageRGBA__ = * d_inputImageRGBA;
+	unsigned char * d_outputImageRGBA__ = * d_outputImageRGBA;
+	const int blurKernelWidth = 9;
+	const float blurKernelSigma = 2.;
+	* filterWidth = blurKernelWidth;
+	* h_filter = new float[blurKernelWidth * blurKernelWidth];
+	float * h_filter__ = * h_filter;
+	float filterSum = 0.f;
+	for (int r = -blurKernelWidth/2; r <= blurKernelWidth/2; ++r)
+	{
+		for (int c = -blurKernelWidth/2; c <= blurKernelWidth/2; ++c)
+		{
+			float filterValue = expf(-(float)(c*c + r*r)/(2.f*blurKernelSigma*blurKernelSigma));
+			(*h_filter)[(r+blurKernelWidth/2) * blurKernelWidth + c + blurKernelWidth/2] = filterValue;
+			filterSum += filterValue;
+		}
+	}
+	float normalizationFactor = 1.f / filterSum;
+	for (int r = -blurKernelWidth/2; r <= blurKernelWidth/2; ++r)
+	{
+		for (int c = -blurKernelWidth/2; c <= blurKernelWidth/2; ++c)
+		{
+			(*h_filter)[(r+blurKernelWidth/2) * blurKernelWidth + c + blurKernelWidth/2] *= normalizationFactor;
+		}
+	}
+
+	checkCudaErrors(cudaMalloc(d_redBlurred, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMalloc(d_greenBlurred, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMalloc(d_blueBlurred, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMemset(*d_redBlurred, 0, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMemset(*d_greenBlurred, 0, sizeof(unsigned char)*numPixels));
+	checkCudaErrors(cudaMemset(*d_blueBlurred, 0, sizeof(unsigned char)*numPixels));
 }
