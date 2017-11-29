@@ -50,7 +50,7 @@ class Mat {
 				int cols() const { return m_cols; }
 				int channels() const { return m_channels; }
 				int pixels() const { return m_rows * m_cols; }
-				T *data() const { return m_data.get(); }
+				T * data() { return m_data.get(); }
 
 		protected:
 				int m_rows, m_cols;

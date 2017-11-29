@@ -31,3 +31,32 @@ GaussCache::GaussCache(float sigma) {
 	for (int i = 1; i <= center; i ++)
 		kernel[-i] = (kernel[i] *= fac);
 }
+
+
+GaussCacheGPU::GaussCacheGPU(float sigma) {
+	kw = ceil(0.3 * (sigma / 2 - 1) + 0.8) * GAUSS_WINDOW_FACTOR;
+	if (kw % 2 == 0) kw ++;
+	kernel_buf.reset(new float[kw*kw]);
+
+	const int center = kw / 2;
+	kernel = kernel_buf.get();
+	
+	// generating the kernel
+	double sum = 0.;
+	double r;
+	double exp_coeff = 2 * sigma * sigma;
+	for (int i = -center; i <= center; ++i) {
+		for (int j = -center; j <= center; ++j) {
+			r = sqrt(i * i + j * j);
+			kernel[(i+center) * kw + (j+center)] = exp(-r * r / exp_coeff) / (M_PI * exp_coeff);
+			sum += kernel[(i+center) * kw + (j+center)];
+		}
+	}
+
+	// normalizing the kernel
+	for (int i = -center; i <= center; ++i) {
+		for (int j = -center; j <= center; ++j) {
+			kernel[(i+center) * kw + (j+center)] /= sum;
+		}
+	}
+}
