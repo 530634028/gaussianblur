@@ -1,3 +1,4 @@
+#include <iostream>
 #include "../utils/image.hh"
 #include "../gaussian.hh"
 

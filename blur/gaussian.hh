@@ -3,7 +3,7 @@
 #include <vector>
 #include "utils/mat.h"
 #include "utils/utils.hh"
-#include "kernel/kernel.h"
+#include "gaussian.cuh"
 
 class GaussCache {
 	public:
