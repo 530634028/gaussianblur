@@ -15,10 +15,10 @@ __global__ void GaussianBlurKernel(const float * img, float * dst, const int wid
 		const int pw = i % kw;
 		const int ph = (i / kw) % kw;
 		const int n = i / kw / kw;
-		int hstart = ph - center;
-		int wstart = pw - center;
-		int hend = min(hstart + kw, height + center);
-		int wend = min(wstart + kw, width + center);
+		int hstart = ph;
+		int wstart = pw;
+		int hend = min(hstart + kw, height);
+		int wend = min(wstart + kw, width);
 		hstart = max(hstart, 0);
 		wstart = max(wstart, 0);
 		hend = min(hend, height);
@@ -43,13 +43,48 @@ __global__ void GaussianBlurKernel(const float * img, float * dst, const int wid
 void GaussianBlurCaller(const float * img, float * dst, const int w, const int h,
                         const int kw, const int center, float * kernel) 
 {
+	// padding
+	float * h_img = (float*)malloc(sizeof(float)*(w+2*center)*(h+2*center));
+	float * cur_line = (float*)malloc(sizeof(float)*w);
+	float * h_img_index;
+	memcpy(cur_line, img, sizeof(float)*w);
+	for (int i = 0; i < center; ++i)
+	{
+		h_img_index = h_img + i * (w + 2 * center);
+		memcpy(h_img_index + center, cur_line, sizeof(float)*w);
+	}
+	for (int i = 0; i < h; ++i)
+	{
+		h_img_index = h_img + (w + 2 * center) * center + i * (w + 2 * center);
+		for (int j = 0; j < center; ++j)
+			*(h_img_index + j) = *(img + i * w);
+		memcpy(h_img_index + center, img + i * w, sizeof(float)*w);
+		for (int j = 0; j < center; ++j)
+			*(h_img_index + center + w +j) = *(img + i * w + w - 1);
+	}
+	for (int i = 0; i < center; ++i)
+	{
+		h_img_index = h_img + (w + 2 * center) * center + (w + 2 * center) * h + i * (w + 2 * center);
+		memcpy(h_img_index + center, img + (h-1)*w, sizeof(float)*w);
+	}
+
+	h_img_index = h_img;
+	for (int i = 0; i < (h+2*center); ++i)
+	{
+		for (int j = 0; j < (w+2*center); ++j)
+		{
+			std::cout << h_img[i*(w+2*center) + j] << ", ";
+		}
+		std::cout << std::endl;
+	}
+
 	float * d_img;
 	float * d_dst;
 	float * d_kernel;
-	cudaMalloc(&d_img, sizeof(float)*w*h);
+	cudaMalloc(&d_img, sizeof(float)*(w+2*center)*(h+2*center));
 	cudaMalloc(&d_dst, sizeof(float)*w*h);
 	cudaMalloc(&d_kernel, sizeof(float)*kw*kw);
-	cudaMemcpy(d_img, img, sizeof(float)*w*h, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_img, h_img, sizeof(float)*(w+2*center)*(h+2*center), cudaMemcpyHostToDevice);
 	cudaMemcpy(d_dst, dst, sizeof(float)*w*h, cudaMemcpyHostToDevice);
 	cudaMemcpy(d_kernel, kernel, sizeof(float)*kw*kw, cudaMemcpyHostToDevice);
 
