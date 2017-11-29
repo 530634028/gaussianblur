@@ -192,8 +192,10 @@ class GaussianBlurGPU {
 			const int kw = gcache.kw;
 			const int center = kw / 2;
 
-			GaussianBlurCaller(img.data(), ret.data(), kw, center, gcache.kernel_buf.get());
+			GaussianBlurCaller(img.data(), ret.data(), w, h,
+                                           kw, center, gcache.kernel_buf.get());
 
+			
 			return ret;
 		}
 };

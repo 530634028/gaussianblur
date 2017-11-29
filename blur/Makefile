@@ -45,7 +45,7 @@ cpu:
 	cat log
 
 gpu: cuda
-	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(BUILD_DIR)/gaussian_cu.o $(CC_FLAGS) $(CUDA_LIBS)
+	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(BUILD_DIR)/gaussian_cu.o $(CC_FLAGS) $(CUDA_FLAGS) $(CUDA_LIBS)
 	$(BUILD_DIR)/test_gaussian_gpu > log
 	cat log
 
