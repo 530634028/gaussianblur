@@ -36,8 +36,12 @@ NVCC_LDFLAGS = $(CUDA_LIBS)
 
 help:
 	@echo "Command List:"
+	@echo "- all"
 	@echo "- cpu"
 	@echo "- gpu"
+	@echo "- kernel"
+
+all: cpu gpu kernel
 
 cpu:
 	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(CC_FLAGS)
@@ -51,6 +55,11 @@ gpu: cuda
 
 cuda:
 	$(NVCC) -c gaussian.cu -o $(BUILD_DIR)/gaussian_cu.o $(NVCC_FLAGS) $(NVCC_LDFLAGS)
+
+
+kernel:
+	$(CC) -o $(BUILD_DIR)/test_gaussian_kernel $(TESTS_DIR)/test_gaussian_kernel.cc gaussian.cc $(CC_FLAGS)
+	$(BUILD_DIR)/test_gaussian_kernel
 
 clean:
 	rm -rf $(BUILD_DIR)/*

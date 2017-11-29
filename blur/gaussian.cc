@@ -41,22 +41,24 @@ GaussCacheGPU::GaussCacheGPU(float sigma) {
 	const int center = kw / 2;
 	kernel = kernel_buf.get();
 	
-	// generating the kernel
+	// initialize
 	double sum = 0.;
 	double r;
 	double exp_coeff = 2 * sigma * sigma;
+
+	// generating the kernel
 	for (int i = -center; i <= center; ++i) {
 		for (int j = -center; j <= center; ++j) {
 			r = sqrt(i * i + j * j);
-			kernel[(i+center) * kw + (j+center)] = exp(-r * r / exp_coeff) / (M_PI * exp_coeff);
-			sum += kernel[(i+center) * kw + (j+center)];
+			kernel[(i+center)*kw + (j+center)] = exp(-r*r/exp_coeff) / (M_PI*exp_coeff);
+			sum += kernel[(i+center)*kw + (j+center)];
 		}
 	}
 
 	// normalizing the kernel
 	for (int i = -center; i <= center; ++i) {
 		for (int j = -center; j <= center; ++j) {
-			kernel[(i+center) * kw + (j+center)] /= sum;
+			kernel[(i+center)*kw + (j+center)] /= sum;
 		}
 	}
 }
