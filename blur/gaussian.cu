@@ -53,7 +53,11 @@ void GaussianBlurCaller(const float * img, float * dst, const int w, const int h
 	for (int i = 0; i < center; ++i)
 	{
 		h_img_index = h_img + i * (w + 2 * center);
+		for (int j = 0; j < center; ++j)
+			*(h_img_index + j) = cur_line[0];
 		memcpy(h_img_index + center, cur_line, sizeof(float)*w);
+		for (int j = 0; j < center; ++j)
+			*(h_img_index + center + w + j) = cur_line[w-1];
 	}
 	for (int i = 0; i < h; ++i)
 	{
@@ -67,7 +71,11 @@ void GaussianBlurCaller(const float * img, float * dst, const int w, const int h
 	for (int i = 0; i < center; ++i)
 	{
 		h_img_index = h_img + (w + 2 * center) * center + (w + 2 * center) * h + i * (w + 2 * center);
+		for (int j = 0; j < center; ++j)
+			*(h_img_index + j) = *(img + (h-1)*w);
 		memcpy(h_img_index + center, img + (h-1)*w, sizeof(float)*w);
+		for (int j = 0; j < center; ++j)
+			*(h_img_index + center + w + j) = *(img + (h-1)*w + w - 1);
 	}
 
 	h_img_index = h_img;
