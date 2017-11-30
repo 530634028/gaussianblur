@@ -41,7 +41,7 @@ help:
 	@echo "- gpu"
 	@echo "- kernel"
 
-all: cpu gpu kernel
+all: cpu gpu kernel border
 
 cpu:
 	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(CC_FLAGS)
@@ -54,12 +54,16 @@ gpu: cuda
 	cat log
 
 cuda:
-	$(NVCC) -c gaussian.cu -o $(BUILD_DIR)/gaussian_cu.o $(NVCC_FLAGS) $(NVCC_LDFLAGS)
+	$(NVCC) -c gaussian.cu -o $(BUILD_DIR)/gaussian_cu.o $(CC_INCLUDES) $(NVCC_FLAGS) $(NVCC_LDFLAGS)
 
 
 kernel:
 	$(CC) -o $(BUILD_DIR)/test_gaussian_kernel $(TESTS_DIR)/test_gaussian_kernel.cc gaussian.cc $(CC_FLAGS)
 	$(BUILD_DIR)/test_gaussian_kernel
+
+border:
+	$(CC) -o $(BUILD_DIR)/test_border $(TESTS_DIR)/test_border.cc $(CC_FLAGS)
+	$(BUILD_DIR)/test_border
 
 clean:
 	rm -rf $(BUILD_DIR)/*

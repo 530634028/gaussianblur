@@ -2,7 +2,6 @@
 #include "../utils/image.hh"
 #include "../gaussian.hh"
 
-
 template <typename T>
 void test_gaussian_gpu(Mat<T> img) 
 {

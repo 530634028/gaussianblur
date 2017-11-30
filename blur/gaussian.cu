@@ -2,6 +2,7 @@
 #include <iostream>
 #include <cuda.h>
 #include <cuda_runtime.h>
+#include "utils/border.hh"
 
 #define max(a, b) ((a) > (b) ? a : b)
 #define min(a, b) ((a) < (b) ? a : b)
@@ -42,55 +43,12 @@ __global__ void GaussianBlurKernel(const float * img, float * dst, const int wid
 }
 
 
-void GaussianBlurPadding(float * h_img, const float * img, const int w, const int h, const int center)
-{
-	float * cur_line = (float*)malloc(sizeof(float)*w);
-	float * h_img_index;
-	memcpy(cur_line, img, sizeof(float)*w);
-	for (int i = 0; i < center; ++i)
-	{
-		h_img_index = h_img + i * (w + 2 * center);
-		for (int j = 0; j < center; ++j)
-			*(h_img_index + j) = cur_line[0];
-		memcpy(h_img_index + center, cur_line, sizeof(float)*w);
-		for (int j = 0; j < center; ++j)
-			*(h_img_index + center + w + j) = cur_line[w-1];
-	}
-	for (int i = 0; i < h; ++i)
-	{
-		h_img_index = h_img + (w + 2 * center) * center + i * (w + 2 * center);
-		for (int j = 0; j < center; ++j)
-			*(h_img_index + j) = *(img + i * w);
-		memcpy(h_img_index + center, img + i * w, sizeof(float)*w);
-		for (int j = 0; j < center; ++j)
-			*(h_img_index + center + w +j) = *(img + i * w + w - 1);
-	}
-	for (int i = 0; i < center; ++i)
-	{
-		h_img_index = h_img + (w + 2 * center) * center + (w + 2 * center) * h + i * (w + 2 * center);
-		for (int j = 0; j < center; ++j)
-			*(h_img_index + j) = *(img + (h-1)*w);
-		memcpy(h_img_index + center, img + (h-1)*w, sizeof(float)*w);
-		for (int j = 0; j < center; ++j)
-			*(h_img_index + center + w + j) = *(img + (h-1)*w + w - 1);
-	}
-}
-
 void GaussianBlurCaller(const float * img, float * dst, const int w, const int h,
                         const int kw, const int center, float * kernel) 
 {
 	// padding
 	float * h_img = (float*)malloc(sizeof(float)*(w+2*center)*(h+2*center));
-	GaussianBlurPadding(h_img, img, w, h, center);
-
-	for (int i = 0; i < (h+2*center); ++i)
-	{
-		for (int j = 0; j < (w+2*center); ++j)
-		{
-			std::cout << h_img[i*(w+2*center) + j] << ", ";
-		}
-		std::cout << std::endl;
-	}
+	border_padding(h_img, img, w, h, center);
 
 	float * d_img;
 	float * d_dst;

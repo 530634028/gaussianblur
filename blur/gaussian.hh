@@ -202,8 +202,6 @@ class GaussianBlurGPU {
 
 			GaussianBlurCaller(img.ptr(0), ret.ptr(0), w, h,
                                            kw, center, gcache.kernel_buf.get());
-
-			
 			return ret;
 		}
 };
