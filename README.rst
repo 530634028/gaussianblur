@@ -64,6 +64,12 @@ CPU Implementation
 
 Gaussian Kernel Generation
 
+::
+
+    ex = e ^ (-(x * x + y * y) / (2 * sigma * sigma))
+    g(x, y) = 1 / 2 * pi * sigma * sigma * ex
+
+
 1. kernel width
 
 kernel_width = ceil(0.3 * (sigma / 2 - 1) + 0.8) * gauss_window_factor
