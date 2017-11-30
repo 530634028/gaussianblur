@@ -8,6 +8,11 @@
 #define min(a, b) ((a) < (b) ? a : b)
 
 
+/*
+ * - image: padded image
+ * - width: original image width
+ * - height: original image height
+ */
 __global__ void GaussianBlurKernel(const float * img, float * dst, const int width, const int height,
                                    const int kw, const int center, float * kernel) 
 {
@@ -43,7 +48,8 @@ __global__ void GaussianBlurKernel(const float * img, float * dst, const int wid
 }
 
 
-void GaussianBlurCaller(const float * img, float * dst, const int w, const int h,
+template <typename T>
+void GaussianBlurCaller(const T * img, T * dst, const int w, const int h,
                         const int kw, const int center, float * kernel) 
 {
 	// padding
@@ -68,4 +74,5 @@ void GaussianBlurCaller(const float * img, float * dst, const int w, const int h
 	cudaFree(d_img);
 	cudaFree(d_dst);
 	cudaFree(d_kernel);
+	free(h_img);
 }
