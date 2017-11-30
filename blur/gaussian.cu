@@ -10,32 +10,34 @@
 __global__ void GaussianBlurKernel(const float * img, float * dst, const int width, const int height,
                                    const int kw, const int center, float * kernel) 
 {
+	const int img_width = width + 2 * center;
+	const int img_height = height + 2 * center;
 	for (int i = blockIdx.x * blockDim.x + threadIdx.x; i < (width*height); i += blockDim.x * gridDim.x)
 	{
-		const int pw = i % kw;
-		const int ph = (i / kw) % kw;
-		const int n = i / kw / kw;
-		int hstart = ph;
-		int wstart = pw;
-		int hend = min(hstart + kw, height);
-		int wend = min(wstart + kw, width);
+		const int dst_width = i % width;
+		const int dst_height = (i / width) % height;
+		const int n = i / width / height;
+
+		int hstart = dst_height;
+		int wstart = dst_width;
+		int hend = min(hstart + kw, img_height);
+		int wend = min(wstart + kw, img_width);
 		hstart = max(hstart, 0);
 		wstart = max(wstart, 0);
-		hend = min(hend, height);
-		wend = min(wend, width);
-
-		float val = 0;
-		const float * in_slice = img + n * height * width;
+		hend = min(hend, img_height);
+		wend = min(wend, img_width);		
+		float tmp = 0;
 		int counter = 0;
+		const float * in_slice = img + n * img_height * img_width;
 		for (int h = hstart; h < hend; ++h)
 		{
 			for (int w = wstart; w < wend; ++w)
 			{
-				val += in_slice[h * width + w] * kernel[counter];
+				tmp += in_slice[h * img_width + w] * kernel[counter];
 				counter++;
 			}
 		}
-		dst[i] = val;
+		dst[i] = tmp;
 	}
 }
 
