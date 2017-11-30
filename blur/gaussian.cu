@@ -42,11 +42,8 @@ __global__ void GaussianBlurKernel(const float * img, float * dst, const int wid
 }
 
 
-void GaussianBlurCaller(const float * img, float * dst, const int w, const int h,
-                        const int kw, const int center, float * kernel) 
+void GaussianBlurPadding(float * h_img, const float * img, const int w, const int h, const int center)
 {
-	// padding
-	float * h_img = (float*)malloc(sizeof(float)*(w+2*center)*(h+2*center));
 	float * cur_line = (float*)malloc(sizeof(float)*w);
 	float * h_img_index;
 	memcpy(cur_line, img, sizeof(float)*w);
@@ -77,8 +74,15 @@ void GaussianBlurCaller(const float * img, float * dst, const int w, const int h
 		for (int j = 0; j < center; ++j)
 			*(h_img_index + center + w + j) = *(img + (h-1)*w + w - 1);
 	}
+}
 
-	h_img_index = h_img;
+void GaussianBlurCaller(const float * img, float * dst, const int w, const int h,
+                        const int kw, const int center, float * kernel) 
+{
+	// padding
+	float * h_img = (float*)malloc(sizeof(float)*(w+2*center)*(h+2*center));
+	GaussianBlurPadding(h_img, img, w, h, center);
+
 	for (int i = 0; i < (h+2*center); ++i)
 	{
 		for (int j = 0; j < (w+2*center); ++j)
