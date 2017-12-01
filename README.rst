@@ -20,7 +20,9 @@ Overview
 
 Features:
 
+- CPU with OpenMP support
 - CPU and GPU (CUDA) support
+
 
 ==============================================================================
 Algorithms
