@@ -149,9 +149,9 @@ class GaussianBlurFast {
 				wstart = std::max(wstart, 0);
 				hend = std::min(hend, h_img_height);
 				wend = std::min(wend, h_img_width);
-				float tmp = 0;
+				T tmp = 0;
 				int counter = 0;
-				const float * in_slice = h_img + n * h_img_height * h_img_width;
+				const T * in_slice = h_img + n * h_img_height * h_img_width;
 				for (int h = hstart; h < hend; ++h) {
 					for (int w = wstart; w < wend; ++w) {
 						tmp += in_slice[h * h_img_width + w] * gcache.kernel_buf.get()[counter];
