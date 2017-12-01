@@ -15,12 +15,23 @@ void test_gaussian_cpu(Mat<T> img)
 
 
 template <typename T>
-void test_gaussian_fast_cpu(Mat<T> img) 
+void test_gaussian_mp_cpu(Mat<T> img) 
 {
 	GaussianBlurMP blur(2);
 	Mat<T> img_blurred = blur.blur(img);
 
 	std::cout << "image_blurred (openmp): " << std::endl;
+	image_print(img_blurred);
+}
+
+
+template <typename T>
+void test_gaussian_pthread_cpu(Mat<T> img) 
+{
+	GaussianBlurPThread blur(2);
+	Mat<T> img_blurred = blur.blur(img);
+
+	std::cout << "image_blurred (pthread): " << std::endl;
 	image_print(img_blurred);
 }
 
@@ -37,5 +48,6 @@ int main()
 	image_print(img);
 
 	test_gaussian_cpu(img);
-	test_gaussian_fast_cpu(img);
+	test_gaussian_mp_cpu(img);
+	test_gaussian_pthread_cpu(img);
 }

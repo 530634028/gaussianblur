@@ -1,6 +1,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <pthread.h>
 #include "utils/mat.h"
 #include "utils/utils.hh"
 #include "utils/border.hh"
@@ -164,6 +165,65 @@ class GaussianBlurMP {
 			return ret;
 		}
 };
+
+/* ---------------------------------------------------------------------------------------- */
+
+template <typename T>
+void gaussian_pthread(T * h_img, Mat<T> ret, const int w, const int h, 
+                      float * kernel, const int kw, const int center) 
+{
+	const int h_img_width = w + 2 * center;
+	const int h_img_height = h + 2 * center;
+	for (int i = 0; i < w*h; ++i) {
+		const int dst_width = i % w;
+		const int dst_height = (i / w) % h;
+		const int n = i / w / h;
+
+		int hstart = dst_height;
+		int wstart = dst_width;
+		int hend = std::min(hstart + kw, h_img_height);
+		int wend = std::min(wstart + kw, h_img_width);
+		hstart = std::max(hstart, 0);
+		wstart = std::max(wstart, 0);
+		hend = std::min(hend, h_img_height);
+		wend = std::min(wend, h_img_width);
+		T tmp = 0;
+		int counter = 0;
+		const T * in_slice = h_img + n * h_img_height * h_img_width;
+		for (int h = hstart; h < hend; ++h) {
+			for (int w = wstart; w < wend; ++w) {
+				tmp += in_slice[h * h_img_width + w] * kernel[counter];
+				counter++;
+			}
+		}
+		ret.data()[i] = tmp;
+	} 
+}
+
+class GaussianBlurPThread {
+	float sigma;
+	GaussCacheFull gcache;
+	public:
+		GaussianBlurPThread(float sigma): sigma(sigma), gcache(sigma) {}
+
+		// TODO faster convolution
+		template <typename T>
+		Mat<T> blur(const Mat<T>& img) const {
+			m_assert(img.channels() == 1);
+			const int w = img.width(), h = img.height();
+			Mat<T> ret(h, w, img.channels());
+
+			const int kw = gcache.kw;
+			const int center = kw / 2;
+
+			T * h_img = (T*)malloc(sizeof(T)*(w+2*center)*(h+2*center));
+			border_padding(h_img, img.ptr(0), w, h, center);
+			gaussian_pthread(h_img, ret, w, h, gcache.kernel_buf.get(), kw, center);
+
+			return ret;
+		}
+};
+
 
 /* ---------------------------------------------------------------------------------------- */
 
