@@ -8,7 +8,7 @@ int main()
 		std::cout << gcache_cpu.kernel_buf.get()[i] << ", ";
 	std::cout << std::endl;
 
-	GaussCacheGPU gcache_gpu(2);
+	GaussCacheFull gcache_gpu(2);
 	std::cout << "kernel (gpu):" << std::endl;
 	for (int i = 0; i < gcache_gpu.kw; ++i)
 	{

@@ -177,17 +177,17 @@ class GaussianBlurFast {
 
 /* ---------------------------------------------------------------------------------------- */
 
-class GaussCacheGPU {
+class GaussCacheFull {
 	public:
 		std::unique_ptr<float, std::default_delete<float[]>> kernel_buf;
 		float* kernel;
 		int kw;
-		GaussCacheGPU(float sigma);
+		GaussCacheFull(float sigma);
 };
 
 class GaussianBlurGPU {
 	float sigma;
-	GaussCacheGPU gcache;
+	GaussCacheFull gcache;
 	public:
 		GaussianBlurGPU(float sigma): sigma(sigma), gcache(sigma) {}
 
@@ -202,6 +202,7 @@ class GaussianBlurGPU {
 
 			GaussianBlurCaller(img.ptr(0), ret.ptr(0), w, h,
                                            kw, center, gcache.kernel_buf.get());
+
 			return ret;
 		}
 };
