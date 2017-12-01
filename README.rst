@@ -21,6 +21,7 @@ Overview
 Features:
 
 - CPU with OpenMP support
+- CPU with PThread support
 - CPU and GPU (CUDA) support
 
 

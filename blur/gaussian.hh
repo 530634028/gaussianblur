@@ -168,37 +168,65 @@ class GaussianBlurMP {
 
 /* ---------------------------------------------------------------------------------------- */
 
+/*
 template <typename T>
-void gaussian_pthread(T * h_img, Mat<T> ret, const int w, const int h, 
-                      float * kernel, const int kw, const int center) 
+struct gaussian_data {
+	T * h_img;
+	T * ret;
+	int w;
+	int h;
+	float * kernel;
+	int kw;
+	int center;
+};
+
+template <typename T>
+void gaussian_pthread(struct gaussian_data<T> data) 
 {
-	const int h_img_width = w + 2 * center;
-	const int h_img_height = h + 2 * center;
-	for (int i = 0; i < w*h; ++i) {
-		const int dst_width = i % w;
-		const int dst_height = (i / w) % h;
-		const int n = i / w / h;
+	const int h_img_width = data.w + 2 * data.center;
+	const int h_img_height = data.h + 2 * data.center;
+
+	for (int i = 0; i < data.w*data.h; ++i) {
+		const int dst_width = i % data.w;
+		const int dst_height = (i / data.w) % data.h;
+		const int n = i / data.w / data.h;
 
 		int hstart = dst_height;
 		int wstart = dst_width;
-		int hend = std::min(hstart + kw, h_img_height);
-		int wend = std::min(wstart + kw, h_img_width);
+		int hend = std::min(hstart + data.kw, h_img_height);
+		int wend = std::min(wstart + data.kw, h_img_width);
 		hstart = std::max(hstart, 0);
 		wstart = std::max(wstart, 0);
 		hend = std::min(hend, h_img_height);
 		wend = std::min(wend, h_img_width);
 		T tmp = 0;
 		int counter = 0;
-		const T * in_slice = h_img + n * h_img_height * h_img_width;
+		const T * in_slice = data.h_img + n * h_img_height * h_img_width;
 		for (int h = hstart; h < hend; ++h) {
 			for (int w = wstart; w < wend; ++w) {
-				tmp += in_slice[h * h_img_width + w] * kernel[counter];
+				tmp += in_slice[h * h_img_width + w] * data.kernel[counter];
 				counter++;
 			}
 		}
-		ret.data()[i] = tmp;
-	} 
+		data.ret[i] = tmp;
+	}
 }
+
+
+template <typename T>
+pthread_t pthread_create(int n, struct gaussian_data<T> * data) {
+	pthread_t thread_ids[n];
+	for (int i = 0; i < n; ++i)
+		pthread_create(&thread_ids[i], NULL, gaussian_pthread, data);
+
+	return thread_ids;
+}
+
+void pthread_run(int n, pthread_t thread_ids[]) {
+	for (int i = 0; i < n; ++i)
+		pthread_join(thread_ids[i], NULL);
+}
+*/
 
 class GaussianBlurPThread {
 	float sigma;
@@ -218,8 +246,19 @@ class GaussianBlurPThread {
 
 			T * h_img = (T*)malloc(sizeof(T)*(w+2*center)*(h+2*center));
 			border_padding(h_img, img.ptr(0), w, h, center);
-			gaussian_pthread(h_img, ret, w, h, gcache.kernel_buf.get(), kw, center);
-
+/*
+			struct gaussian_data<T> * data = (struct gaussian_data<T>)malloc(sizeof(struct gaussian_data<T>));
+			data->h_img = h_img;
+			data->ret = ret.ptr(0);
+			data->w = w;
+			data->h = h;
+			data->kernel = gcache.kernel_buf.get();
+			data->kw = kw;
+			data->center = center;
+			int n = w * h;
+			pthread_t thread_ids = pthread_create(n, data);
+			pthread_run(n, thread_ids);
+*/
 			return ret;
 		}
 };
