@@ -25,7 +25,7 @@ CUDA_LIBS = -L$(CUDA_LIB_DIR) -lcuda -lcudart
 CC = g++
 CC_OPTS = -std=c++11 -O3 -Wall -Wextra -m64
 CC_FLAGS = $(CC_OPTS) $(CC_INCLUDES)
-CC_LDFLAGS = 
+CC_LDFLAGS = -fopenmp 
 
 NVCC = nvcc
 NVCC_OPTS = -O3 -arch=sm_50 -Xcompiler -Wall -Xcompiler -Wextra -m64
@@ -44,12 +44,12 @@ help:
 all: cpu gpu kernel border
 
 cpu:
-	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(CC_FLAGS)
+	$(CC) -o $(BUILD_DIR)/test_gaussian_cpu $(TESTS_DIR)/test_gaussian_cpu.cc gaussian.cc $(CC_FLAGS) $(CC_LDFLAGS)
 	$(BUILD_DIR)/test_gaussian_cpu > log
 	cat log
 
 gpu: cuda
-	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(BUILD_DIR)/gaussian_cu.o $(CC_FLAGS) $(CUDA_FLAGS) $(CUDA_LIBS)
+	$(CC) -o $(BUILD_DIR)/test_gaussian_gpu $(TESTS_DIR)/test_gaussian_gpu.cc gaussian.cc $(BUILD_DIR)/gaussian_cu.o $(CC_FLAGS) $(CC_LDFLAGS) $(CUDA_FLAGS) $(CUDA_LIBS)
 	$(BUILD_DIR)/test_gaussian_gpu > log
 	cat log
 
