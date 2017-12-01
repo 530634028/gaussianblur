@@ -116,7 +116,7 @@ class MultiScaleGaussianBlur {
 
 class GaussianBlurFast {
 	float sigma;
-	GaussCache gcache;
+	GaussCacheFull gcache;
 	public:
 		GaussianBlurFast(float sigma): sigma(sigma), gcache(sigma) {}
 
@@ -130,8 +130,36 @@ class GaussianBlurFast {
 			const int kw = gcache.kw;
 			const int center = kw / 2;
 
-			float * h_img = (float*)malloc(sizeof(T)*(w+2*center)*(h+2*center));
+			T * h_img = (T*)malloc(sizeof(T)*(w+2*center)*(h+2*center));
 			border_padding(h_img, img.ptr(0), w, h, center);
+			const int h_img_width = w + 2 * center;
+			const int h_img_height = h + 2 * center;
+
+#pragma omp parallel for schedule(dynamic)
+			for (int i = 0; i < w*h; ++i) {
+				const int dst_width = i % w;
+				const int dst_height = (i / w) % h;
+				const int n = i / w / h;
+
+				int hstart = dst_height;
+				int wstart = dst_width;
+				int hend = std::min(hstart + kw, h_img_height);
+				int wend = std::min(wstart + kw, h_img_width);
+				hstart = std::max(hstart, 0);
+				wstart = std::max(wstart, 0);
+				hend = std::min(hend, h_img_height);
+				wend = std::min(wend, h_img_width);
+				float tmp = 0;
+				int counter = 0;
+				const float * in_slice = h_img + n * h_img_height * h_img_width;
+				for (int h = hstart; h < hend; ++h) {
+					for (int w = wstart; w < wend; ++w) {
+						tmp += in_slice[h * h_img_width + w] * gcache.kernel_buf.get()[counter];
+						counter++;
+					}
+				}
+				ret.data()[i] = tmp;
+			} 
 
 			return ret;
 		}
