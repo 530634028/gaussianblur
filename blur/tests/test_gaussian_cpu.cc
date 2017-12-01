@@ -9,7 +9,7 @@ void test_gaussian_cpu(Mat<T> img)
 	GaussianBlur blur(2);
 	Mat<T> img_blurred = blur.blur(img);
 
-	std::cout << "image_blurred: " << std::endl;
+	std::cout << "image_blurred (origin): " << std::endl;
 	image_print(img_blurred);
 }
 
@@ -17,10 +17,10 @@ void test_gaussian_cpu(Mat<T> img)
 template <typename T>
 void test_gaussian_fast_cpu(Mat<T> img) 
 {
-	GaussianBlurFast blur(2);
+	GaussianBlurMP blur(2);
 	Mat<T> img_blurred = blur.blur(img);
 
-	std::cout << "image_blurred: " << std::endl;
+	std::cout << "image_blurred (openmp): " << std::endl;
 	image_print(img_blurred);
 }
 

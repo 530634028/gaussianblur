@@ -114,11 +114,11 @@ class MultiScaleGaussianBlur {
 
 /* ---------------------------------------------------------------------------------------- */
 
-class GaussianBlurFast {
+class GaussianBlurMP {
 	float sigma;
 	GaussCacheFull gcache;
 	public:
-		GaussianBlurFast(float sigma): sigma(sigma), gcache(sigma) {}
+		GaussianBlurMP(float sigma): sigma(sigma), gcache(sigma) {}
 
 		// TODO faster convolution
 		template <typename T>
