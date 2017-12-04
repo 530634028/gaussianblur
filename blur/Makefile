@@ -28,7 +28,7 @@ CC_FLAGS = $(CC_OPTS) $(CC_INCLUDES)
 CC_LDFLAGS = -fopenmp -lpthread 
 
 NVCC = nvcc
-NVCC_OPTS = -O3 -arch=sm_50 -Xcompiler -Wall -Xcompiler -Wextra -m64
+NVCC_OPTS = -std=c++11 -O3 -arch=sm_50 -Xcompiler -Wall -Xcompiler -Wextra -m64
 NVCC_FLAGS = $(NVCC_OPTS) -I$(CUDA_FLAGS)
 NVCC_LDFLAGS = $(CUDA_LIBS)
 
